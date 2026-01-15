@@ -1,0 +1,54 @@
+{
+  "core_questions": [
+    {
+      "id": 1,
+      "category": "Family Tree",
+      "question": "Let's start with some basic information. What were your parents' full names? When and where were they born?"
+    },
+    {
+      "id": 2,
+      "category": "Family Tree",
+      "question": "Tell me about your siblings. What are their names and when were they born?"
+    },
+    {
+      "id": 3,
+      "category": "Childhood",
+      "question": "Where did you grow up? Can you describe the house or neighborhood you lived in as a child?"
+    },
+    {
+      "id": 4,
+      "category": "Childhood",
+      "question": "What's your favorite childhood memory?"
+    },
+    {
+      "id": 5,
+      "category": "Education",
+      "question": "Tell me about your education. Where did you go to school? What did you study?"
+    },
+    {
+      "id": 6,
+      "category": "Career",
+      "question": "What was your first real job, and what did you learn from it?"
+    },
+    {
+      "id": 7,
+      "category": "Career",
+      "question": "What work are you most proud of in your career?"
+    },
+    {
+      "id": 8,
+      "category": "Values",
+      "question": "What's the most important lesson you learned from your parents?"
+    },
+    {
+      "id": 9,
+      "category": "Life Events",
+      "question": "Can you tell me about a difficult time in your life and how you got through it?"
+    },
+    {
+      "id": 10,
+      "category": "Wisdom",
+      "question": "What advice would you give to your younger self?"
+    }
+  ]
+}

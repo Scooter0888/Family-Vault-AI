@@ -1,0 +1,29 @@
+# Environment variables (contains API keys - NEVER commit!)
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Mac
+.DS_Store
+
+# Data files (may contain sensitive interview data)
+data/parent_profiles/*.json
+
+# Streamlit (keep config but not secrets)
+.streamlit/secrets.toml

@@ -1,0 +1,10 @@
+Defaulting to user installation because normal site-packages is not writeable
+Collecting fpdf2
+  Downloading fpdf2-2.8.4-py2.py3-none-any.whl (251 kB)
+Collecting defusedxml
+  Downloading defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
+Collecting fonttools>=4.34.0
+  Downloading fonttools-4.60.2-cp39-cp39-macosx_10_9_universal2.whl (2.9 MB)
+Requirement already satisfied: Pillow!=9.2.*,>=8.0.0 in /Users/apple/Library/Python/3.9/lib/python/site-packages (from fpdf2) (11.3.0)
+Installing collected packages: fonttools, defusedxml, fpdf2
+Successfully installed defusedxml-0.7.1 fonttools-4.60.2 fpdf2-2.8.4

@@ -1,0 +1,7 @@
+# AI Granny Prototype - Python Dependencies
+# Install with: pip3 install -r requirements.txt
+
+streamlit>=1.28.0
+openai>=1.0.0
+python-dotenv>=1.0.0
+fpdf2>=2.7.0
