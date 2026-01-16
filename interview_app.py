@@ -580,16 +580,16 @@ if st.session_state.app_mode == "Interview":
                 if st.session_state.selected_language != "English":
                     st.caption(f"Original: {current_q['question']}")
 
-                # TTS controls and auto-speak question
+                # TTS controls - always generate audio, let user click play button
                 col_tts1, col_tts2 = st.columns([4, 1])
                 with col_tts2:
-                    # Mute toggle button - clearer labels
+                    # Show/hide audio toggle
                     if st.session_state.question_tts_muted:
-                        button_label = "🔇 Sound Off"
-                        button_help = "Click to turn ON question audio"
+                        button_label = "🔇 Show Audio"
+                        button_help = "Click to show audio player"
                     else:
-                        button_label = "🔊 Sound On"
-                        button_help = "Click to turn OFF question audio"
+                        button_label = "🔊 Hide Audio"
+                        button_help = "Click to hide audio player"
 
                     if st.button(button_label,
                                 key=f"tts_mute_{st.session_state.current_question}",
@@ -597,13 +597,14 @@ if st.session_state.app_mode == "Interview":
                         st.session_state.question_tts_muted = not st.session_state.question_tts_muted
                         st.rerun()
 
-                # Show tip on first question if muted
+                # Show tip on first question if audio hidden
                 if st.session_state.current_question == 0 and st.session_state.question_tts_muted:
-                    st.info("💡 **Tip:** Click the 🔇 button to hear questions spoken aloud!")
+                    st.info("💡 **Tip:** Click '🔇 Show Audio' above to hear this question spoken aloud!")
 
-                # Auto-speak the question (only once per question)
-                question_key = f"q_{st.session_state.current_question}"
-                if not st.session_state.question_tts_muted and st.session_state.last_spoken_question != question_key:
+                # Generate and show audio player (if not muted)
+                if not st.session_state.question_tts_muted:
+                    question_key = f"q_{st.session_state.current_question}"
+                    # Always generate audio for current question
                     try:
                         success, audio_path, error = text_to_speech(
                             question_text,
@@ -612,10 +613,11 @@ if st.session_state.app_mode == "Interview":
                         if success and audio_path and os.path.exists(audio_path):
                             with open(audio_path, 'rb') as audio_file:
                                 audio_bytes = audio_file.read()
-                            st.audio(audio_bytes, format='audio/wav', autoplay=True)
-                            st.session_state.last_spoken_question = question_key
+                            # Show audio player with manual play button (no autoplay to avoid browser restrictions)
+                            st.audio(audio_bytes, format='audio/wav', autoplay=False)
+                            st.caption("▶️ Click play button above to hear the question")
                     except:
-                        pass  # Silently fail if TTS doesn't work
+                        st.caption("⚠️ Audio generation unavailable")
 
                 # Input method selection (persists across questions)
                 input_options = ["Type answer", "Record audio"]
@@ -767,16 +769,16 @@ if st.session_state.app_mode == "Interview":
                 if st.session_state.selected_language != "English":
                     st.caption(f"Original: {followup_q}")
 
-                # TTS controls and auto-speak follow-up question
+                # TTS controls - always generate audio, let user click play button
                 col_tts1, col_tts2 = st.columns([4, 1])
                 with col_tts2:
-                    # Mute toggle button - clearer labels
+                    # Show/hide audio toggle
                     if st.session_state.question_tts_muted:
-                        button_label = "🔇 Sound Off"
-                        button_help = "Click to turn ON question audio"
+                        button_label = "🔇 Show Audio"
+                        button_help = "Click to show audio player"
                     else:
-                        button_label = "🔊 Sound On"
-                        button_help = "Click to turn OFF question audio"
+                        button_label = "🔊 Hide Audio"
+                        button_help = "Click to hide audio player"
 
                     if st.button(button_label,
                                 key=f"tts_mute_followup_{st.session_state.current_question}_{st.session_state.current_followup}",
@@ -784,9 +786,8 @@ if st.session_state.app_mode == "Interview":
                         st.session_state.question_tts_muted = not st.session_state.question_tts_muted
                         st.rerun()
 
-                # Auto-speak the follow-up question (only once per question)
-                followup_key = f"q_{st.session_state.current_question}_f_{st.session_state.current_followup}"
-                if not st.session_state.question_tts_muted and st.session_state.last_spoken_question != followup_key:
+                # Generate and show audio player (if not muted)
+                if not st.session_state.question_tts_muted:
                     try:
                         success, audio_path, error = text_to_speech(
                             followup_q_translated,
@@ -795,10 +796,11 @@ if st.session_state.app_mode == "Interview":
                         if success and audio_path and os.path.exists(audio_path):
                             with open(audio_path, 'rb') as audio_file:
                                 audio_bytes = audio_file.read()
-                            st.audio(audio_bytes, format='audio/wav', autoplay=True)
-                            st.session_state.last_spoken_question = followup_key
+                            # Show audio player with manual play button (no autoplay to avoid browser restrictions)
+                            st.audio(audio_bytes, format='audio/wav', autoplay=False)
+                            st.caption("▶️ Click play button above to hear the question")
                     except:
-                        pass  # Silently fail if TTS doesn't work
+                        st.caption("⚠️ Audio generation unavailable")
 
                 # Input method selection for follow-up (persists across questions)
                 followup_input_options = ["Type answer", "Record audio"]
