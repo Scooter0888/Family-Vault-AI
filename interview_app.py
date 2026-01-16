@@ -145,7 +145,7 @@ if 'save_early' not in st.session_state:
 if 'resuming_filepath' not in st.session_state:
     st.session_state.resuming_filepath = None  # Track file being resumed
 if 'question_tts_muted' not in st.session_state:
-    st.session_state.question_tts_muted = False  # Mute TTS for interview questions
+    st.session_state.question_tts_muted = True  # Mute TTS by default (browser autoplay restrictions)
 if 'last_spoken_question' not in st.session_state:
     st.session_state.last_spoken_question = None  # Track which question was last spoken
 # Load questions
@@ -583,13 +583,23 @@ if st.session_state.app_mode == "Interview":
                 # TTS controls and auto-speak question
                 col_tts1, col_tts2 = st.columns([4, 1])
                 with col_tts2:
-                    # Mute toggle button
-                    mute_icon = "🔇" if st.session_state.question_tts_muted else "🔊"
-                    if st.button(f"{mute_icon} Mute" if st.session_state.question_tts_muted else f"{mute_icon} Sound",
+                    # Mute toggle button - clearer labels
+                    if st.session_state.question_tts_muted:
+                        button_label = "🔇 Sound Off"
+                        button_help = "Click to turn ON question audio"
+                    else:
+                        button_label = "🔊 Sound On"
+                        button_help = "Click to turn OFF question audio"
+
+                    if st.button(button_label,
                                 key=f"tts_mute_{st.session_state.current_question}",
-                                help="Toggle question audio"):
+                                help=button_help):
                         st.session_state.question_tts_muted = not st.session_state.question_tts_muted
                         st.rerun()
+
+                # Show tip on first question if muted
+                if st.session_state.current_question == 0 and st.session_state.question_tts_muted:
+                    st.info("💡 **Tip:** Click the 🔇 button to hear questions spoken aloud!")
 
                 # Auto-speak the question (only once per question)
                 question_key = f"q_{st.session_state.current_question}"
@@ -760,11 +770,17 @@ if st.session_state.app_mode == "Interview":
                 # TTS controls and auto-speak follow-up question
                 col_tts1, col_tts2 = st.columns([4, 1])
                 with col_tts2:
-                    # Mute toggle button
-                    mute_icon = "🔇" if st.session_state.question_tts_muted else "🔊"
-                    if st.button(f"{mute_icon} Mute" if st.session_state.question_tts_muted else f"{mute_icon} Sound",
+                    # Mute toggle button - clearer labels
+                    if st.session_state.question_tts_muted:
+                        button_label = "🔇 Sound Off"
+                        button_help = "Click to turn ON question audio"
+                    else:
+                        button_label = "🔊 Sound On"
+                        button_help = "Click to turn OFF question audio"
+
+                    if st.button(button_label,
                                 key=f"tts_mute_followup_{st.session_state.current_question}_{st.session_state.current_followup}",
-                                help="Toggle question audio"):
+                                help=button_help):
                         st.session_state.question_tts_muted = not st.session_state.question_tts_muted
                         st.rerun()
 
