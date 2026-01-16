@@ -605,19 +605,22 @@ if st.session_state.app_mode == "Interview":
                 if not st.session_state.question_tts_muted:
                     question_key = f"q_{st.session_state.current_question}"
                     # Always generate audio for current question
-                    try:
-                        success, audio_path, error = text_to_speech(
-                            question_text,
-                            st.session_state.selected_voice_profile
-                        )
-                        if success and audio_path and os.path.exists(audio_path):
-                            with open(audio_path, 'rb') as audio_file:
-                                audio_bytes = audio_file.read()
-                            # Show audio player with manual play button (no autoplay to avoid browser restrictions)
-                            st.audio(audio_bytes, format='audio/wav', autoplay=False)
-                            st.caption("▶️ Click play button above to hear the question")
-                    except:
-                        st.caption("⚠️ Audio generation unavailable")
+                    with st.spinner("Generating audio..."):
+                        try:
+                            success, audio_path, error = text_to_speech(
+                                question_text,
+                                st.session_state.selected_voice_profile
+                            )
+                            if success and audio_path and os.path.exists(audio_path):
+                                with open(audio_path, 'rb') as audio_file:
+                                    audio_bytes = audio_file.read()
+                                # Show audio player with manual play button (no autoplay to avoid browser restrictions)
+                                st.audio(audio_bytes, format='audio/wav', autoplay=False)
+                                st.caption("▶️ Click play button above to hear the question")
+                            else:
+                                st.error(f"❌ Audio generation failed: {error}")
+                        except Exception as e:
+                            st.error(f"❌ Audio error: {str(e)}")
 
                 # Input method selection (persists across questions)
                 input_options = ["Type answer", "Record audio"]
@@ -788,19 +791,22 @@ if st.session_state.app_mode == "Interview":
 
                 # Generate and show audio player (if not muted)
                 if not st.session_state.question_tts_muted:
-                    try:
-                        success, audio_path, error = text_to_speech(
-                            followup_q_translated,
-                            st.session_state.selected_voice_profile
-                        )
-                        if success and audio_path and os.path.exists(audio_path):
-                            with open(audio_path, 'rb') as audio_file:
-                                audio_bytes = audio_file.read()
-                            # Show audio player with manual play button (no autoplay to avoid browser restrictions)
-                            st.audio(audio_bytes, format='audio/wav', autoplay=False)
-                            st.caption("▶️ Click play button above to hear the question")
-                    except:
-                        st.caption("⚠️ Audio generation unavailable")
+                    with st.spinner("Generating audio..."):
+                        try:
+                            success, audio_path, error = text_to_speech(
+                                followup_q_translated,
+                                st.session_state.selected_voice_profile
+                            )
+                            if success and audio_path and os.path.exists(audio_path):
+                                with open(audio_path, 'rb') as audio_file:
+                                    audio_bytes = audio_file.read()
+                                # Show audio player with manual play button (no autoplay to avoid browser restrictions)
+                                st.audio(audio_bytes, format='audio/wav', autoplay=False)
+                                st.caption("▶️ Click play button above to hear the question")
+                            else:
+                                st.error(f"❌ Audio generation failed: {error}")
+                        except Exception as e:
+                            st.error(f"❌ Audio error: {str(e)}")
 
                 # Input method selection for follow-up (persists across questions)
                 followup_input_options = ["Type answer", "Record audio"]
