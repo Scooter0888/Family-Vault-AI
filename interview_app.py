@@ -604,12 +604,12 @@ if st.session_state.app_mode == "Interview":
                 # Generate and show audio player (if not muted)
                 if not st.session_state.question_tts_muted:
                     question_key = f"q_{st.session_state.current_question}"
-                    # Always generate audio for current question
+                    # Always generate audio for current question using gentle voice
                     with st.spinner("Generating audio..."):
                         try:
                             success, audio_path, error = text_to_speech(
                                 question_text,
-                                st.session_state.selected_voice_profile
+                                "Gentle & Soothing (Echo)"  # Use soothing voice for interview questions
                             )
                             if success and audio_path and os.path.exists(audio_path):
                                 with open(audio_path, 'rb') as audio_file:
@@ -795,7 +795,7 @@ if st.session_state.app_mode == "Interview":
                         try:
                             success, audio_path, error = text_to_speech(
                                 followup_q_translated,
-                                st.session_state.selected_voice_profile
+                                "Gentle & Soothing (Echo)"  # Use soothing voice for interview questions
                             )
                             if success and audio_path and os.path.exists(audio_path):
                                 with open(audio_path, 'rb') as audio_file:
@@ -1476,7 +1476,18 @@ elif st.session_state.app_mode == "Q&A":
                 )
             else:
                 st.write("**🎤 Record your question (hands-free mode):**")
-                st.caption("After recording, your question will be automatically transcribed and answered with voice!")
+                st.caption("Record as many questions as you want - the latest one will be used!")
+
+                # Add clear button if there's an active question
+                if 'qa_current_question' in st.session_state and st.session_state.qa_current_question:
+                    col_q1, col_q2 = st.columns([3, 1])
+                    with col_q1:
+                        st.info(f"**Current question:** {st.session_state.qa_current_question}")
+                    with col_q2:
+                        if st.button("🔄 Clear", use_container_width=True, help="Clear current question and record a new one"):
+                            st.session_state.qa_current_question = None
+                            st.session_state.qa_current_audio_key = None
+                            st.rerun()
 
                 audio_question = st.audio_input(
                     "Click to start/stop recording",
@@ -1488,22 +1499,25 @@ elif st.session_state.app_mode == "Q&A":
                     audio_hash = hash(audio_question.getbuffer().tobytes())
                     audio_key = f"qa_audio_transcription_{audio_hash}"
 
-                    if audio_key not in st.session_state.transcription_cache:
+                    # Only transcribe if this is a new recording (different hash)
+                    if audio_key != st.session_state.get('qa_current_audio_key'):
                         with st.spinner("🎤 Transcribing your question..."):
                             transcript = transcribe_audio(audio_question)
                             if transcript:
                                 st.session_state.transcription_cache[audio_key] = transcript
+                                st.session_state.qa_current_question = transcript
+                                st.session_state.qa_current_audio_key = audio_key
                                 st.success(f"✅ Heard: \"{transcript}\"")
-                                st.info("🔍 Searching for answer...")
-                                # Set flag to trigger search on next run
-                                st.session_state.auto_search_question = transcript
-                                st.session_state.current_audio_hash = audio_hash
+                                st.caption("Click 'Search' below to find the answer, or record a new question to replace this one.")
                                 st.rerun()
+                    else:
+                        # Show cached transcription
+                        if audio_key in st.session_state.transcription_cache:
+                            question = st.session_state.transcription_cache[audio_key]
 
-                    # Show what was transcribed
-                    if audio_key in st.session_state.transcription_cache:
-                        question = st.session_state.transcription_cache[audio_key]
-                        st.caption(f"Question: {question}")
+                # Use the current question if available
+                if 'qa_current_question' in st.session_state and st.session_state.qa_current_question:
+                    question = st.session_state.qa_current_question
         else:
             # Standard text input
             question = st.text_input(
@@ -1515,18 +1529,9 @@ elif st.session_state.app_mode == "Q&A":
 
         col1, col2 = st.columns([3, 1])
 
-        # Check if we should auto-search (from voice recording)
-        auto_search = st.session_state.get('auto_search_question', None)
-        if auto_search:
-            question = auto_search
-            st.session_state.auto_search_question = None  # Clear the flag
-            should_search = True
-        else:
-            should_search = False
-
         with col1:
             search_button_label = f"🔍 Search {qa_search_target}" if qa_search_target != "All Interviews" else "🔍 Search All Interviews"
-            if st.button(search_button_label, type="primary", use_container_width=True) or should_search:
+            if st.button(search_button_label, type="primary", use_container_width=True):
                 if question.strip():
                     # Filter interviews based on selection
                     if qa_search_target == "All Interviews":
