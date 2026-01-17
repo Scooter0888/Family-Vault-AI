@@ -170,8 +170,14 @@ st.markdown("""
    - Accent: Soft Green #66CDAA (very sparing)
 */
 
-/* Headers - Deep Navy */
-h1, h2, h3 {
+/* Main Title - Brand Teal */
+h1 {
+    color: #2EC4B6;
+    font-weight: 600;
+}
+
+/* Subheaders - Deep Navy */
+h2, h3 {
     color: #0F1C2E;
     font-weight: 600;
 }
@@ -246,6 +252,11 @@ body, p, div {
 /* Sidebar - Soft Off-White */
 section[data-testid="stSidebar"] {
     background: #F6F8FB;
+}
+
+/* Sidebar Header - Brand Teal */
+section[data-testid="stSidebar"] h1 {
+    color: #2EC4B6;
 }
 
 section[data-testid="stSidebar"] .stRadio > label {
