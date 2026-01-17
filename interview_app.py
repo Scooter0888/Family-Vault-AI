@@ -20,8 +20,8 @@ from voice_helper import text_to_speech, get_voice_profile_names
 
 # Configure the page
 st.set_page_config(
-    page_title="Family Vault",
-    page_icon="🏛️",
+    page_title="FamilyVaultAI",
+    page_icon="🔷",  # Placeholder - represents FV brand colors (teal/blue)
     layout="centered"
 )
 
@@ -275,8 +275,8 @@ a:hover {
 </style>
 """, unsafe_allow_html=True)
 
-# Main title
-st.title("Family Vault")
+# Main title - Official FamilyVaultAI branding
+st.title("FamilyVaultAI")
 st.write("Preserve your family's history, stories, wisdom, and memories forever")
 
 # Language selector
@@ -310,7 +310,7 @@ with col2:
 st.divider()
 
 # Help section
-with st.expander("ℹ️ How to Use Family Vault", expanded=False):
+with st.expander("ℹ️ How to Use FamilyVaultAI", expanded=False):
     st.markdown("""
     ### Two Modes:
 
@@ -344,7 +344,7 @@ with st.expander("ℹ️ How to Use Family Vault", expanded=False):
 
 # Sidebar with mode selector and progress
 with st.sidebar:
-    st.header("🏛️ Family Vault")
+    st.header("FamilyVaultAI")
 
     st.divider()
 
@@ -1456,7 +1456,7 @@ elif st.session_state.app_mode == "Q&A":
         st.info("Complete an interview first, then come back here to query your family vault.")
     else:
         # Show vault statistics
-        st.success(f"📚 **Family Vault:** {len(interview_files)} interview(s) available")
+        st.success(f"📚 **FamilyVaultAI:** {len(interview_files)} interview(s) available")
 
         # Show all interviews in vault
         with st.expander("📊 View All Interviews"):
@@ -1801,9 +1801,9 @@ elif st.session_state.app_mode == "Q&A":
 # Footer
 st.divider()
 st.markdown("""
-<div style='text-align: center; color: #666; padding: 20px;'>
+<div style='text-align: center; color: #0F1C2E; padding: 20px;'>
     <small>
-    Family Vault v1.0 | Preserve family memories forever<br>
+    FamilyVaultAI v1.0 | Preserve family memories forever<br>
     Powered by OpenAI GPT-4 | Built with Streamlit<br>
     💡 <b>Tip:</b> Use Quick Search in the sidebar to find information across all interviews
     </small>
