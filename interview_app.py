@@ -170,17 +170,6 @@ st.markdown("""
    - Accent: Soft Green #66CDAA (very sparing)
 */
 
-/* Main Title - Brand Teal (override Streamlit defaults) */
-h1 {
-    color: #2EC4B6 !important;
-    font-weight: 600;
-}
-
-/* Streamlit title override */
-.stMarkdown h1 {
-    color: #2EC4B6 !important;
-}
-
 /* Subheaders - Deep Navy */
 h2, h3 {
     color: #0F1C2E !important;
@@ -262,15 +251,6 @@ section[data-testid="stSidebar"] {
         #F6F8FB 100%);
 }
 
-/* Sidebar Header - Brand Teal (override Streamlit) */
-section[data-testid="stSidebar"] h1 {
-    color: #2EC4B6 !important;
-}
-
-section[data-testid="stSidebar"] .stMarkdown h1 {
-    color: #2EC4B6 !important;
-}
-
 section[data-testid="stSidebar"] .stRadio > label {
     font-weight: 500;
     color: #0F1C2E;
@@ -305,8 +285,8 @@ a:hover {
 st.markdown("""
 <div style='text-align: center; margin-bottom: 20px;'>
     <div style='display: inline-flex; align-items: center; gap: 12px;'>
-        <div style='width: 50px; height: 50px; background: linear-gradient(135deg, #2EC4B6 0%, #4A7DFF 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px;'>FV</div>
-        <h1 style='color: #2EC4B6; margin: 0; font-size: 2.5em;'>FamilyVaultAI</h1>
+        <div style='width: 50px; height: 50px; background: linear-gradient(135deg, #2EC4B6 0%, #4A7DFF 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px;'>FV</div>
+        <h1 style='background: linear-gradient(90deg, #2EC4B6 0%, #4A7DFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0; font-size: 2.5em; font-weight: 700;'>FamilyVaultAI</h1>
     </div>
 </div>
 <p style='text-align: center; color: #0F1C2E;'>Preserve your family's history, stories, wisdom, and memories forever</p>
@@ -377,11 +357,11 @@ with st.expander("ℹ️ How to Use FamilyVaultAI", expanded=False):
 
 # Sidebar with mode selector and progress
 with st.sidebar:
-    # Sidebar header with FV logo and gradient
+    # Sidebar header with FV logo and gradient text
     st.markdown("""
     <div style='display: flex; align-items: center; gap: 10px; margin-bottom: 20px;'>
-        <div style='width: 40px; height: 40px; background: linear-gradient(135deg, #2EC4B6 0%, #4A7DFF 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;'>FV</div>
-        <h2 style='color: #2EC4B6; margin: 0; font-size: 1.3em;'>FamilyVaultAI</h2>
+        <div style='width: 40px; height: 40px; background: linear-gradient(135deg, #2EC4B6 0%, #4A7DFF 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;'>FV</div>
+        <h2 style='background: linear-gradient(90deg, #2EC4B6 0%, #4A7DFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0; font-size: 1.2em; font-weight: 700;'>FamilyVaultAI</h2>
     </div>
     """, unsafe_allow_html=True)
 
