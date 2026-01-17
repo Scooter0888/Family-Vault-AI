@@ -254,9 +254,12 @@ body, p, div {
     margin: 1rem 0;
 }
 
-/* Sidebar - Soft Off-White */
+/* Sidebar - Gradient background */
 section[data-testid="stSidebar"] {
-    background: #F6F8FB;
+    background: linear-gradient(180deg,
+        rgba(46, 196, 182, 0.08) 0%,
+        rgba(74, 125, 255, 0.05) 50%,
+        #F6F8FB 100%);
 }
 
 /* Sidebar Header - Brand Teal (override Streamlit) */
@@ -273,9 +276,12 @@ section[data-testid="stSidebar"] .stRadio > label {
     color: #0F1C2E;
 }
 
-/* Main background - White */
+/* Main background - Gradient top section */
 .main {
-    background-color: #FFFFFF;
+    background: linear-gradient(180deg,
+        rgba(46, 196, 182, 0.03) 0%,
+        rgba(74, 125, 255, 0.02) 50%,
+        #FFFFFF 100%);
 }
 
 /* Dividers - Teal */
@@ -295,9 +301,16 @@ a:hover {
 </style>
 """, unsafe_allow_html=True)
 
-# Main title - Official FamilyVaultAI branding
-st.title("FamilyVaultAI")
-st.write("Preserve your family's history, stories, wisdom, and memories forever")
+# Main title with FV logo - Official FamilyVaultAI branding
+st.markdown("""
+<div style='text-align: center; margin-bottom: 20px;'>
+    <div style='display: inline-flex; align-items: center; gap: 12px;'>
+        <div style='width: 50px; height: 50px; background: linear-gradient(135deg, #2EC4B6 0%, #4A7DFF 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px;'>FV</div>
+        <h1 style='color: #2EC4B6; margin: 0; font-size: 2.5em;'>FamilyVaultAI</h1>
+    </div>
+</div>
+<p style='text-align: center; color: #0F1C2E;'>Preserve your family's history, stories, wisdom, and memories forever</p>
+""", unsafe_allow_html=True)
 
 # Language selector
 col1, col2, col3 = st.columns([2, 2, 2])
@@ -364,7 +377,13 @@ with st.expander("ℹ️ How to Use FamilyVaultAI", expanded=False):
 
 # Sidebar with mode selector and progress
 with st.sidebar:
-    st.header("FamilyVaultAI")
+    # Sidebar header with FV logo and gradient
+    st.markdown("""
+    <div style='display: flex; align-items: center; gap: 10px; margin-bottom: 20px;'>
+        <div style='width: 40px; height: 40px; background: linear-gradient(135deg, #2EC4B6 0%, #4A7DFF 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;'>FV</div>
+        <h2 style='color: #2EC4B6; margin: 0; font-size: 1.3em;'>FamilyVaultAI</h2>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.divider()
 
