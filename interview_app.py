@@ -583,13 +583,13 @@ if st.session_state.app_mode == "Interview":
                 # TTS controls - always generate audio, let user click play button
                 col_tts1, col_tts2 = st.columns([4, 1])
                 with col_tts2:
-                    # Show/hide audio toggle
+                    # Audio toggle - plays question immediately when enabled
                     if st.session_state.question_tts_muted:
-                        button_label = "🔇 Show Audio"
-                        button_help = "Click to show audio player"
+                        button_label = "🔇 Play Audio"
+                        button_help = "Click to hear question spoken aloud"
                     else:
-                        button_label = "🔊 Hide Audio"
-                        button_help = "Click to hide audio player"
+                        button_label = "🔊 Mute Audio"
+                        button_help = "Click to turn off audio"
 
                     if st.button(button_label,
                                 key=f"tts_mute_{st.session_state.current_question}",
@@ -605,7 +605,7 @@ if st.session_state.app_mode == "Interview":
                 if not st.session_state.question_tts_muted:
                     question_key = f"q_{st.session_state.current_question}"
                     # Always generate audio for current question using gentle voice
-                    with st.spinner("Generating audio..."):
+                    with st.spinner("🎤 Generating question audio..."):
                         try:
                             success, audio_path, error = text_to_speech(
                                 question_text,
@@ -614,9 +614,9 @@ if st.session_state.app_mode == "Interview":
                             if success and audio_path and os.path.exists(audio_path):
                                 with open(audio_path, 'rb') as audio_file:
                                     audio_bytes = audio_file.read()
-                                # Show audio player with manual play button (no autoplay to avoid browser restrictions)
-                                st.audio(audio_bytes, format='audio/wav', autoplay=False)
-                                st.caption("▶️ Click play button above to hear the question")
+                                # Auto-play audio when user enables sound
+                                st.audio(audio_bytes, format='audio/wav', autoplay=True)
+                                st.caption("🔊 Question audio playing...")
                             else:
                                 st.error(f"❌ Audio generation failed: {error}")
                         except Exception as e:
@@ -775,13 +775,13 @@ if st.session_state.app_mode == "Interview":
                 # TTS controls - always generate audio, let user click play button
                 col_tts1, col_tts2 = st.columns([4, 1])
                 with col_tts2:
-                    # Show/hide audio toggle
+                    # Audio toggle - plays question immediately when enabled
                     if st.session_state.question_tts_muted:
-                        button_label = "🔇 Show Audio"
-                        button_help = "Click to show audio player"
+                        button_label = "🔇 Play Audio"
+                        button_help = "Click to hear question spoken aloud"
                     else:
-                        button_label = "🔊 Hide Audio"
-                        button_help = "Click to hide audio player"
+                        button_label = "🔊 Mute Audio"
+                        button_help = "Click to turn off audio"
 
                     if st.button(button_label,
                                 key=f"tts_mute_followup_{st.session_state.current_question}_{st.session_state.current_followup}",
@@ -791,7 +791,7 @@ if st.session_state.app_mode == "Interview":
 
                 # Generate and show audio player (if not muted)
                 if not st.session_state.question_tts_muted:
-                    with st.spinner("Generating audio..."):
+                    with st.spinner("🎤 Generating question audio..."):
                         try:
                             success, audio_path, error = text_to_speech(
                                 followup_q_translated,
@@ -800,9 +800,9 @@ if st.session_state.app_mode == "Interview":
                             if success and audio_path and os.path.exists(audio_path):
                                 with open(audio_path, 'rb') as audio_file:
                                     audio_bytes = audio_file.read()
-                                # Show audio player with manual play button (no autoplay to avoid browser restrictions)
-                                st.audio(audio_bytes, format='audio/wav', autoplay=False)
-                                st.caption("▶️ Click play button above to hear the question")
+                                # Auto-play audio when user enables sound
+                                st.audio(audio_bytes, format='audio/wav', autoplay=True)
+                                st.caption("🔊 Question audio playing...")
                             else:
                                 st.error(f"❌ Audio generation failed: {error}")
                         except Exception as e:
