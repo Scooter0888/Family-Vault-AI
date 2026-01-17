@@ -148,6 +148,10 @@ if 'question_tts_muted' not in st.session_state:
     st.session_state.question_tts_muted = True  # Mute TTS by default (browser autoplay restrictions)
 if 'last_spoken_question' not in st.session_state:
     st.session_state.last_spoken_question = None  # Track which question was last spoken
+if 'qa_auto_search_trigger' not in st.session_state:
+    st.session_state.qa_auto_search_trigger = False  # Trigger auto-search after voice transcription
+if 'qa_search_completed' not in st.session_state:
+    st.session_state.qa_search_completed = False  # Track if search has been completed
 # Load questions
 questions = load_questions()
 
@@ -1487,6 +1491,8 @@ elif st.session_state.app_mode == "Q&A":
                         if st.button("🔄 Clear", use_container_width=True, help="Clear current question and record a new one"):
                             st.session_state.qa_current_question = None
                             st.session_state.qa_current_audio_key = None
+                            st.session_state.qa_search_completed = False
+                            st.session_state.qa_auto_search_trigger = False
                             st.rerun()
 
                 audio_question = st.audio_input(
@@ -1507,8 +1513,10 @@ elif st.session_state.app_mode == "Q&A":
                                 st.session_state.transcription_cache[audio_key] = transcript
                                 st.session_state.qa_current_question = transcript
                                 st.session_state.qa_current_audio_key = audio_key
+                                st.session_state.qa_auto_search_trigger = True  # Trigger auto-search
+                                st.session_state.qa_search_completed = False  # Reset search state
                                 st.success(f"✅ Heard: \"{transcript}\"")
-                                st.caption("Click 'Search' below to find the answer, or record a new question to replace this one.")
+                                st.info("🔍 Searching for answer...")
                                 st.rerun()
                     else:
                         # Show cached transcription
@@ -1527,12 +1535,20 @@ elif st.session_state.app_mode == "Q&A":
                 key="qa_text_question_simple"
             )
 
+        # Check if auto-search should be triggered
+        should_auto_search = st.session_state.qa_auto_search_trigger and not st.session_state.qa_search_completed
+
+        # Manual search button (fallback for errors/empty transcripts)
         col1, col2 = st.columns([3, 1])
 
+        manual_search_clicked = False
         with col1:
             search_button_label = f"🔍 Search {qa_search_target}" if qa_search_target != "All Interviews" else "🔍 Search All Interviews"
             if st.button(search_button_label, type="primary", use_container_width=True):
-                if question.strip():
+                manual_search_clicked = True
+
+        # Execute search if auto-triggered or manual button clicked
+        if (should_auto_search or manual_search_clicked) and question:
                     # Filter interviews based on selection
                     if qa_search_target == "All Interviews":
                         interviews_to_search = interview_files
@@ -1596,26 +1612,45 @@ elif st.session_state.app_mode == "Q&A":
                                             break  # Found answer, stop searching
 
                             if found_answer:
-                                # Clear the auto-search flag to prevent loop
-                                if 'auto_search_question' in st.session_state:
-                                    del st.session_state.auto_search_question
-                                if 'current_audio_hash' in st.session_state:
-                                    del st.session_state.current_audio_hash
+                                # Mark search as completed and clear auto-search trigger
+                                st.session_state.qa_search_completed = True
+                                st.session_state.qa_auto_search_trigger = False
                                 st.rerun()
                             else:
                                 st.warning(f"❌ No relevant information found in {qa_search_target}")
                                 st.info("💡 Try rephrasing your question or check if this information was captured in the interviews.")
+                                # Mark search as completed even if no answer found
+                                st.session_state.qa_search_completed = True
+                                st.session_state.qa_auto_search_trigger = False
 
                         except Exception as e:
                             st.error(f"❌ Error: {str(e)}")
                             st.info("💡 Please check your internet connection and OpenAI API status.")
-                else:
-                    st.warning("⚠️ Please enter a question")
+                            # Mark search as completed even on error
+                            st.session_state.qa_search_completed = True
+                            st.session_state.qa_auto_search_trigger = False
+        elif should_auto_search and not question:
+            # Auto-search triggered but no question (edge case)
+            st.warning("⚠️ Please enter a question")
+            st.session_state.qa_auto_search_trigger = False
 
         with col2:
             if st.button("🗑️ Clear History", use_container_width=True):
                 st.session_state.qa_history = []
                 st.rerun()
+
+        # Show "Ask another question" button after search is completed
+        if st.session_state.qa_search_completed:
+            st.divider()
+            col_aq1, col_aq2, col_aq3 = st.columns([1, 2, 1])
+            with col_aq2:
+                if st.button("🎤 Ask Another Question", type="primary", use_container_width=True, help="Clear current question and ask a new one"):
+                    # Reset Q&A state
+                    st.session_state.qa_current_question = None
+                    st.session_state.qa_current_audio_key = None
+                    st.session_state.qa_search_completed = False
+                    st.session_state.qa_auto_search_trigger = False
+                    st.rerun()
 
         # Display Q&A History and Extracted Data with Tabs
         st.divider()
