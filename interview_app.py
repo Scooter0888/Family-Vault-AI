@@ -159,63 +159,118 @@ questions = load_questions()
 # MAIN APP
 # ============================================
 
-# Custom CSS for polished UI
+# FamilyVaultAI Brand-Compliant CSS
 st.markdown("""
 <style>
-/* Cleaner headers */
-h1 {
-    color: #1a1a2e;
+/* === FamilyVaultAI Visual Identity === */
+/* Brand Colors (Authorized Palette Only):
+   - Primary Gradient: Teal #2EC4B6, Fresh Blue #4A7DFF
+   - Text: Deep Navy #0F1C2E, Soft Off-White #F6F8FB
+   - Backgrounds: White #FFFFFF, Soft Off-White #F6F8FB
+   - Accent: Soft Green #66CDAA (very sparing)
+*/
+
+/* Headers - Deep Navy */
+h1, h2, h3 {
+    color: #0F1C2E;
     font-weight: 600;
 }
 
-/* Better button styling */
-.stButton > button {
+/* Body text - Deep Navy */
+body, p, div {
+    color: #0F1C2E;
+}
+
+/* Primary CTAs - Brand Gradient */
+.stButton > button[kind="primary"] {
+    background: linear-gradient(90deg, #2EC4B6 0%, #4A7DFF 100%);
+    color: #F6F8FB;
+    border: none;
     border-radius: 8px;
     font-weight: 500;
     transition: all 0.2s ease;
 }
 
-.stButton > button:hover {
+.stButton > button[kind="primary"]:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.3);
 }
 
-/* Progress bar styling */
+/* Secondary buttons */
+.stButton > button {
+    border-radius: 8px;
+    font-weight: 500;
+    color: #0F1C2E;
+    border: 1px solid #2EC4B6;
+    background: #FFFFFF;
+    transition: all 0.2s ease;
+}
+
+.stButton > button:hover {
+    background: #F6F8FB;
+    transform: translateY(-1px);
+}
+
+/* Progress bar - Brand Gradient */
 .stProgress > div > div {
-    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    background: linear-gradient(90deg, #2EC4B6 0%, #4A7DFF 100%);
     border-radius: 10px;
 }
 
-/* Info boxes */
+/* Info boxes - Soft Off-White background */
 .stAlert {
     border-radius: 8px;
+    background-color: #F6F8FB;
+    border-left: 4px solid #2EC4B6;
 }
 
-/* Interview question styling */
+/* Interview question styling - Teal accent */
 .question-card {
-    background: #f8f9fa;
-    border-left: 4px solid #1f77b4;
+    background: #F6F8FB;
+    border-left: 4px solid #2EC4B6;
     padding: 1rem;
     margin: 1rem 0;
     border-radius: 0 8px 8px 0;
 }
 
-/* Success message styling */
+/* Success states - Soft Green (sparing) */
 .success-banner {
-    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    background: #F6F8FB;
+    border-left: 4px solid #66CDAA;
     padding: 1rem;
     border-radius: 8px;
     text-align: center;
     margin: 1rem 0;
 }
 
-/* Sidebar improvements */
+/* Sidebar - Soft Off-White */
 section[data-testid="stSidebar"] {
-    background: #f8f9fa;
+    background: #F6F8FB;
 }
 
 section[data-testid="stSidebar"] .stRadio > label {
     font-weight: 500;
+    color: #0F1C2E;
+}
+
+/* Main background - White */
+.main {
+    background-color: #FFFFFF;
+}
+
+/* Dividers - Teal */
+hr {
+    border-color: #2EC4B6;
+    opacity: 0.2;
+}
+
+/* Links - Fresh Blue */
+a {
+    color: #4A7DFF;
+}
+
+a:hover {
+    color: #2EC4B6;
 }
 </style>
 """, unsafe_allow_html=True)
