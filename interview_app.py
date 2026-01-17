@@ -170,15 +170,20 @@ st.markdown("""
    - Accent: Soft Green #66CDAA (very sparing)
 */
 
-/* Main Title - Brand Teal */
+/* Main Title - Brand Teal (override Streamlit defaults) */
 h1 {
-    color: #2EC4B6;
+    color: #2EC4B6 !important;
     font-weight: 600;
+}
+
+/* Streamlit title override */
+.stMarkdown h1 {
+    color: #2EC4B6 !important;
 }
 
 /* Subheaders - Deep Navy */
 h2, h3 {
-    color: #0F1C2E;
+    color: #0F1C2E !important;
     font-weight: 600;
 }
 
@@ -254,9 +259,13 @@ section[data-testid="stSidebar"] {
     background: #F6F8FB;
 }
 
-/* Sidebar Header - Brand Teal */
+/* Sidebar Header - Brand Teal (override Streamlit) */
 section[data-testid="stSidebar"] h1 {
-    color: #2EC4B6;
+    color: #2EC4B6 !important;
+}
+
+section[data-testid="stSidebar"] .stMarkdown h1 {
+    color: #2EC4B6 !important;
 }
 
 section[data-testid="stSidebar"] .stRadio > label {
