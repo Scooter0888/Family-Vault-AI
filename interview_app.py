@@ -154,6 +154,8 @@ if 'qa_search_completed' not in st.session_state:
     st.session_state.qa_search_completed = False  # Track if search has been completed
 if 'recording_for_question' not in st.session_state:
     st.session_state.recording_for_question = None  # Track which question we're recording for
+if 'should_autoplay_question' not in st.session_state:
+    st.session_state.should_autoplay_question = False  # Only auto-play when user explicitly toggles sound
 # Load questions
 questions = load_questions()
 
@@ -674,6 +676,11 @@ if st.session_state.app_mode == "Interview":
                     if st.button(button_label,
                                 key=f"tts_mute_{st.session_state.current_question}",
                                 help=button_help):
+                        # If we're unmuting (turning on sound), set autoplay flag
+                        if st.session_state.question_tts_muted:
+                            st.session_state.should_autoplay_question = True
+                        else:
+                            st.session_state.should_autoplay_question = False
                         st.session_state.question_tts_muted = not st.session_state.question_tts_muted
                         st.rerun()
 
@@ -694,9 +701,16 @@ if st.session_state.app_mode == "Interview":
                             if success and audio_path and os.path.exists(audio_path):
                                 with open(audio_path, 'rb') as audio_file:
                                     audio_bytes = audio_file.read()
-                                # Auto-play audio when user enables sound
-                                st.audio(audio_bytes, format='audio/wav', autoplay=True)
-                                st.caption("🔊 Question audio playing...")
+                                # Only auto-play if user just toggled sound ON (should_autoplay_question=True)
+                                # After playing once, reset flag so it doesn't auto-play again on reruns
+                                autoplay_now = st.session_state.should_autoplay_question
+                                if autoplay_now:
+                                    st.session_state.should_autoplay_question = False
+                                st.audio(audio_bytes, format='audio/wav', autoplay=autoplay_now)
+                                if autoplay_now:
+                                    st.caption("🔊 Question audio playing...")
+                                else:
+                                    st.caption("🔊 Question audio (click to play)")
                             else:
                                 st.error(f"❌ Audio generation failed: {error}")
                         except Exception as e:
@@ -893,6 +907,11 @@ if st.session_state.app_mode == "Interview":
                     if st.button(button_label,
                                 key=f"tts_mute_followup_{st.session_state.current_question}_{st.session_state.current_followup}",
                                 help=button_help):
+                        # If we're unmuting (turning on sound), set autoplay flag
+                        if st.session_state.question_tts_muted:
+                            st.session_state.should_autoplay_question = True
+                        else:
+                            st.session_state.should_autoplay_question = False
                         st.session_state.question_tts_muted = not st.session_state.question_tts_muted
                         st.rerun()
 
@@ -907,9 +926,16 @@ if st.session_state.app_mode == "Interview":
                             if success and audio_path and os.path.exists(audio_path):
                                 with open(audio_path, 'rb') as audio_file:
                                     audio_bytes = audio_file.read()
-                                # Auto-play audio when user enables sound
-                                st.audio(audio_bytes, format='audio/wav', autoplay=True)
-                                st.caption("🔊 Question audio playing...")
+                                # Only auto-play if user just toggled sound ON (should_autoplay_question=True)
+                                # After playing once, reset flag so it doesn't auto-play again on reruns
+                                autoplay_now = st.session_state.should_autoplay_question
+                                if autoplay_now:
+                                    st.session_state.should_autoplay_question = False
+                                st.audio(audio_bytes, format='audio/wav', autoplay=autoplay_now)
+                                if autoplay_now:
+                                    st.caption("🔊 Question audio playing...")
+                                else:
+                                    st.caption("🔊 Question audio (click to play)")
                             else:
                                 st.error(f"❌ Audio generation failed: {error}")
                         except Exception as e:
