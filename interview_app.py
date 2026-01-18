@@ -871,6 +871,12 @@ if st.session_state.app_mode == "Interview":
                         st.session_state.recording_for_question = None
                         st.rerun()
 
+                # Save & Resume Later button (below navigation buttons)
+                st.divider()
+                if st.button("💾 Save & Resume Later", use_container_width=True, help="Save this interview and continue later"):
+                    st.session_state.save_early = True
+                    st.rerun()
+
             else:
                 # FOLLOW-UP QUESTION MODE
                 st.subheader(f"Question {st.session_state.current_question + 1} - Follow-up {st.session_state.current_followup + 1}")
@@ -1095,6 +1101,12 @@ if st.session_state.app_mode == "Interview":
                             st.session_state.followup_answers = []
                         st.session_state.current_question += 1
                         st.rerun()
+
+                # Save & Resume Later button (below follow-up navigation buttons)
+                st.divider()
+                if st.button("💾 Save & Resume Later", use_container_width=True, help="Save this interview and continue later"):
+                    st.session_state.save_early = True
+                    st.rerun()
 
         else:
             # Interview complete!
