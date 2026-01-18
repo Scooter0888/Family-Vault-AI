@@ -152,6 +152,8 @@ if 'qa_auto_search_trigger' not in st.session_state:
     st.session_state.qa_auto_search_trigger = False  # Trigger auto-search after voice transcription
 if 'qa_search_completed' not in st.session_state:
     st.session_state.qa_search_completed = False  # Track if search has been completed
+if 'recording_for_question' not in st.session_state:
+    st.session_state.recording_for_question = None  # Track which question we're recording for
 # Load questions
 questions = load_questions()
 
@@ -733,7 +735,11 @@ if st.session_state.app_mode == "Interview":
                         key=f"audio_{st.session_state.current_question}"
                     )
 
+                    # Only process audio if we have it and we're recording for this question
                     if audio_bytes:
+                        # Mark that we're recording for this question to prevent premature navigation
+                        st.session_state.recording_for_question = st.session_state.current_question
+
                         # Generate unique key for this audio
                         audio_data_bytes = audio_bytes.getbuffer().tobytes()
                         audio_hash = hash(audio_data_bytes)
@@ -751,6 +757,7 @@ if st.session_state.app_mode == "Interview":
                                 )
                                 if transcript:
                                     st.session_state.transcription_cache[audio_key] = transcript
+                                    st.session_state.recording_for_question = st.session_state.current_question
                                     success_msg = "✅ Transcription complete! Review and edit below:"
                                     if st.session_state.translate_audio_to_english:
                                         success_msg = "✅ Transcription and translation complete! Review and edit below:"
@@ -769,6 +776,20 @@ if st.session_state.app_mode == "Interview":
                                 help="The audio has been transcribed. You can edit this text to fix any errors before submitting."
                             )
                             st.info("💡 **Tip**: Review the transcript above and make any corrections to names, dates, or places before continuing.")
+                    elif st.session_state.recording_for_question == st.session_state.current_question and st.session_state.transcription_cache:
+                        # If we were recording for this question but now have no audio_bytes,
+                        # show the cached transcription for editing/confirmation
+                        for cache_key in st.session_state.transcription_cache:
+                            if f"transcript_{st.session_state.current_question}_" in cache_key:
+                                answer = st.text_area(
+                                    "Review and edit transcript:",
+                                    value=st.session_state.transcription_cache[cache_key],
+                                    height=200,
+                                    key=f"edit_transcript_{st.session_state.current_question}",
+                                    help="The audio has been transcribed. You can edit this text to fix any errors before submitting."
+                                )
+                                st.info("💡 **Tip**: Review the transcript above and make any corrections to names, dates, or places before continuing.")
+                                break
 
                 st.divider()
 
@@ -776,11 +797,16 @@ if st.session_state.app_mode == "Interview":
                 col1, col2, col3 = st.columns([1, 2, 1])
 
                 with col1:
-                    # Back button (if not on first question)
+                    # Back button (if not on first question and not recording)
                     if st.session_state.current_question > 0:
-                        if st.button("⬅️ Previous"):
-                            st.session_state.current_question -= 1
-                            st.rerun()
+                        # Disable Previous if we're in the middle of recording for this question
+                        if input_method == "Record audio" and st.session_state.recording_for_question == st.session_state.current_question:
+                            st.button("⬅️ Previous", disabled=True, help="Finish recording first")
+                        else:
+                            if st.button("⬅️ Previous"):
+                                st.session_state.current_question -= 1
+                                st.session_state.recording_for_question = None
+                                st.rerun()
 
                 with col2:
                     # Generate Follow-ups button
@@ -788,6 +814,8 @@ if st.session_state.app_mode == "Interview":
                         if answer.strip():
                             # Save the main answer temporarily
                             st.session_state.main_answer = answer
+                            # Clear recording flag since we're submitting the answer
+                            st.session_state.recording_for_question = None
 
                             # Show loading message
                             with st.spinner("🤖 AI is generating thoughtful follow-up questions..."):
@@ -826,6 +854,7 @@ if st.session_state.app_mode == "Interview":
                     # Skip button
                     if st.button("Skip ⏭️"):
                         st.session_state.current_question += 1
+                        st.session_state.recording_for_question = None
                         st.rerun()
 
             else:
